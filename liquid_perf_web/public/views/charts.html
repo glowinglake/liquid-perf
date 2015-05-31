@@ -1,0 +1,64 @@
+<html>
+  <head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript" src="views/query.js"></script>
+    <script type="text/javascript">
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      // google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+    
+      $(document).ready(function() {
+
+      HttpGet("/getAllRuns", function (response) {
+      fillAllRuns(response, "left_run");
+      });
+
+
+      $('#getAllRuns').click(function(){
+      HttpGet("/getAllRuns", function(){});
+      });
+
+      $('#getAllTests').click(function(){
+      HttpGet("/getAllTests", drawChart);
+      HttpGet("/getAllTests", fillTestnameDropDown);
+      });
+      
+      $("p").click(function(){
+      $(this).hide();
+      });
+      });
+      
+    </script>
+
+
+
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <button type="button" onclick="drawChart()">Request data</button>
+    <button type="button" id="getAllRuns">get all runs</button>
+    <button type="button" id="getAllTests">get all tests</button>
+    <br> 
+    <select id="testnames" onchange="handleTestChange()"></select>    
+
+    <br> 
+    <select id="left_run" onchange="handleLeftRunChange()"></select>    
+
+    <select id="right_run" onchange="handleRightRunChange()"></select>    
+
+
+    <div id="all_runs"></div>
+    <div id="chart_div"></div>    
+  </body>
+</html>
