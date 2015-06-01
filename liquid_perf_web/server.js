@@ -121,36 +121,6 @@ app.get("/getAllPerfFromRun", function(req,res){
                                              }
                                          })
                             }
-                    
-                    /*
-                    // place holder for all elements
-                    var tnames = new Array(alltests.length);
-                    for (var i=0; i<alltests.length; i++) {
-                        tnames[i] = alltests[i].testname;
-                        console.log("querying all profling results for test:" + tnames[i]);
-                        connection.query('SELECT * from liquid_perf where testname=\"' +tnames[i] + '\"' +
-                                         ' AND githash LIKE \"%' + run_hash + '%\" ORDER BY percentage DESC', function(err, rows, fields) {
-                                if (!err) {
-                                    var element = {testname:tnames[i], functions:rows};
-                                    console.log(element);
-                                    //console.log("now printing total after pushed test"+tname);
-                                    total.push(element);
-                                    //console.log(total);
-                                    if (total.length >= alltests.length) {
-                                        console.log("get all");
-                                        res.send(total);
-                                    }
-                                } else {
-                                    console.log('Error while fetching range.');
-                                    res.send("");
-                                }
-                            });
-                    }
-                    var totalstring = JSON.stringify(total);
-                    console.log(totalstring);
-                    res.contentType('application/json');
-                    res.send(total);
-                    */
                 } else {
                     console.log('Error while fetching distinct tests in run.');
                     res.send("");
