@@ -75,7 +75,7 @@ function fillAllRuns(runs, select_id) {
     for (i = 0; i < runs.length; i++) {
         var option = document.createElement("option");
         var time = new Date(runs[i].time);
-        option.value = time;
+        option.value = runs[i].hash;
         option.textContent = time;
         selector.appendChild(option);
     };
@@ -113,29 +113,14 @@ function handleTestChange() {
 
 // update the perf results of selected runs on the left
 function handleLeftRunChange() {
-    var test = document.getElementById("testnames").value;
-    HttpGet("/getTestRuntime?testname=" + test, function(rows) {
-            // update the div
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'date');
-            data.addColumn('number', 'seconds');
-            // data.addColumn('number', 'cpu cycle');
-            
-            var jsrows = [];
-            var i;
-            for (i=0; i < rows.length; i++) {
-                var element = [rows[i].date, rows[i].time_in_sec/* , rows[i].cycle */];
-                jsrows.push(element);
+    var hash = document.getElementById("left_run_sel").value;
+    HttpGet("/getAllPerfFromRun?run_hash=" + hash, function(rows) {
+            /*
+            var div = document.getElementById('comp_left');
+            div.innerHTML = '';
+            for (var i=0; i<rows.length; i++) {
+                div.innerHTML = rows[i].div.innerHTML + 'Extra stuff';
             }
-            data.addRows(jsrows);
-            // Set chart options
-            var options = {'title':test + " history run time",
-                           'width':1200,
-                           'height':900
-            };
-             
-            // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            */
         });
 }

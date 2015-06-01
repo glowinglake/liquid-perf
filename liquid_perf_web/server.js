@@ -1,5 +1,6 @@
 var express    = require("express");
 var mysql      = require('mysql');
+var async      = require('async');
 var connection = mysql.createConnection({
         host     : 'localhost',
         user     : 'ywang2',
@@ -63,36 +64,7 @@ app.get("/getAllRuns",function(req,res) {
             });
     });
 
-app.get("/getAllRuns",function(req,res) {
-        var min_start = new Date();
-        var max_start = new Date();
-        //var min_start = "33";
-        connection.query('SELECT MIN(time), MAX(time) from date_hash', function(err, rows, fields) {
-                if (!err) {
-                    min_start = rows[0]["MIN(time)"];
-                    max_start = rows[0]["MAX(time)"];
-                }
-                else {
-                    console.log('Error while fetching range.');
-                    res.send("");
-                }
-                console.log(min_start, max_start);
-                connection.query('SELECT * from date_hash where time between \'' + 
-                                 min_start.toISOString().slice(0, 19).replace('T', ' ') + 
-                                 '\' and \'' + max_start.toISOString().slice(0, 19).replace('T', ' ') + 
-                                 '\'', function(err, rows, fields) {
-                        if (!err) {
-                            console.log(rows[0].time);
-                            res.send(rows);
-                        }
-                        else {
-                            console.log('Error while performing Query.');
-                            res.send("");
-                        }
-                                 });
-            });
-    });
-
+// get all testnames
 app.get("/getAllTests",function(req,res){
         connection.query('SELECT DISTINCT testname from liquid_perf', function(err, rows, fields) {
                 if (!err) {
@@ -105,6 +77,7 @@ app.get("/getAllTests",function(req,res){
             });
     });
 
+// get the historical runtime of a specific test
 app.get("/getTestRuntime", function(req,res){
         var test = req.query.testname;
         console.log("get test runtime : test is:", test);
@@ -119,8 +92,71 @@ app.get("/getTestRuntime", function(req,res){
             });
     });
 
-
-
+// get all tests' profiling results from a date
+app.get("/getAllPerfFromRun", function(req,res){
+        //var date = new Date(req.query.date);
+        var run_hash = req.query.run_hash;
+        console.log("get all perf from run_hash :", run_hash);
+        // get all unique tests
+        var alltests;
+        connection.query('SELECT DISTINCT testname from liquid_perf where githash LIKE \"%' + run_hash + '%\"', function(err, alltests, fields) {
+                if (!err) {
+                    console.log(alltests);
+                    async.map(alltests, fetchPerf, function (err, results) {
+                            if (!err) {
+                                console.log("All perf results fetche for test ", alltests);
+                                res.send(results);
+                            } else {
+                                console.log("Error" + err);
+                            }
+                        });
+                     function fetchPerf(test, cb) {
+                        connection.query('SELECT * from liquid_perf where testname=\"' +test.testname + '\"' +
+                                         ' AND githash LIKE \"%' + run_hash + '%\" ORDER BY percentage DESC', function(err, rows, fields) {
+                                             if (!err) {
+                                                 var element = {testname:test.testname, functions:rows};
+                                                 cb(null, element);
+                                             } else {
+                                                 console.log('Error while fetching range.');
+                                             }
+                                         })
+                            }
+                    
+                    /*
+                    // place holder for all elements
+                    var tnames = new Array(alltests.length);
+                    for (var i=0; i<alltests.length; i++) {
+                        tnames[i] = alltests[i].testname;
+                        console.log("querying all profling results for test:" + tnames[i]);
+                        connection.query('SELECT * from liquid_perf where testname=\"' +tnames[i] + '\"' +
+                                         ' AND githash LIKE \"%' + run_hash + '%\" ORDER BY percentage DESC', function(err, rows, fields) {
+                                if (!err) {
+                                    var element = {testname:tnames[i], functions:rows};
+                                    console.log(element);
+                                    //console.log("now printing total after pushed test"+tname);
+                                    total.push(element);
+                                    //console.log(total);
+                                    if (total.length >= alltests.length) {
+                                        console.log("get all");
+                                        res.send(total);
+                                    }
+                                } else {
+                                    console.log('Error while fetching range.');
+                                    res.send("");
+                                }
+                            });
+                    }
+                    var totalstring = JSON.stringify(total);
+                    console.log(totalstring);
+                    res.contentType('application/json');
+                    res.send(total);
+                    */
+                } else {
+                    console.log('Error while fetching distinct tests in run.');
+                    res.send("");
+                }
+            });
+    });
 
 app.get("/",function(req,res){
         res.sendfile('./public/views/charts.html');

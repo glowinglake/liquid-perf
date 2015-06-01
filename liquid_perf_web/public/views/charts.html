@@ -16,13 +16,13 @@
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
-    
+
       $(document).ready(function() {
-
+      // load all runs for both left/right drop down selector
       HttpGet("/getAllRuns", function (response) {
-      fillAllRuns(response, "left_run");
+      fillAllRuns(response, "left_run_sel");
+      fillAllRuns(response, "right_run_sel");
       });
-
 
       $('#getAllRuns').click(function(){
       HttpGet("/getAllRuns", function(){});
@@ -32,12 +32,12 @@
       HttpGet("/getAllTests", drawChart);
       HttpGet("/getAllTests", fillTestnameDropDown);
       });
-      
+
       $("p").click(function(){
       $(this).hide();
       });
       });
-      
+
     </script>
 
 
@@ -49,16 +49,20 @@
     <button type="button" onclick="drawChart()">Request data</button>
     <button type="button" id="getAllRuns">get all runs</button>
     <button type="button" id="getAllTests">get all tests</button>
-    <br> 
-    <select id="testnames" onchange="handleTestChange()"></select>    
+    <br>
+    <select id="testnames" onchange="handleTestChange()"></select>
 
-    <br> 
-    <select id="left_run" onchange="handleLeftRunChange()"></select>    
+    <br>
+    <select id="left_run_sel" onchange="handleLeftRunChange()"></select>
 
-    <select id="right_run" onchange="handleRightRunChange()"></select>    
+    <select id="right_run_sel" onchange="handleRightRunChange()"></select>
 
 
     <div id="all_runs"></div>
-    <div id="chart_div"></div>    
+    <div id="chart_div"></div>
+    <br>
+    Comparison
+    <div id="comp_left"></div>
+    <div id="comp_right"></div>
   </body>
 </html>
