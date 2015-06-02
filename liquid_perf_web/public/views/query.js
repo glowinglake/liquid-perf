@@ -7,7 +7,7 @@ function HttpGet(path, callback) {
     xmlhttp.onreadystatechange=function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
             {
-                document.getElementById("all_runs").innerHTML=xmlhttp.responseText;
+                //document.getElementById("all_runs").innerHTML=xmlhttp.responseText;
                 var jsonResponse = JSON.parse(xmlhttp.responseText);
                 callback(jsonResponse);
             }
@@ -101,8 +101,8 @@ function handleTestChange() {
             data.addRows(jsrows);
             // Set chart options
             var options = {'title':test + " history run time",
-                           'width':1200,
-                           'height':900
+                           'width':800,
+                           'height':600
             };
 
             // Instantiate and draw our chart, passing in some options.
@@ -197,6 +197,7 @@ function showNewComparison() {
                                     var right_percent = right[j].percentage;
                                     var left_percent = left_map[func];
                                     //div.innerHTML += 'function ' + func + ' left:' + left_percent + ' right:' + right_percent;
+
                                     if (right_percent > 10 /* min percent to qualify */ && right_percent > left_percent && ((right_percent - left_percent)*1.0/left_percent > 0.4)) {
                                         div.innerHTML += '<br>Runtime change: in ' + test + ', function ' + func + 
                                             ' runtime percentage has increased from left:' + left_percent + ' to right:' + right_percent;
