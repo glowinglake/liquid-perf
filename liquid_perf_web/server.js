@@ -132,4 +132,4 @@ app.get("/",function(req,res){
         res.sendfile('./public/views/charts.html');
     });
 
-app.listen(8080);
+app.listen(9527);
