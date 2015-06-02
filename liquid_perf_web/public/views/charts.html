@@ -24,12 +24,9 @@
       fillAllRuns(response, "right_run_sel");
       });
 
-      $('#getAllRuns').click(function(){
-      HttpGet("/getAllRuns", function(){});
-      });
+      HttpGet("/getAllTests", fillTestnameDropDown);
 
       $('#getAllTests').click(function(){
-      HttpGet("/getAllTests", drawChart);
       HttpGet("/getAllTests", fillTestnameDropDown);
       });
 
@@ -37,9 +34,6 @@
       showNewComparison();
       });
 
-      $("p").click(function(){
-      $(this).hide();
-      });
       });
 
     </script>
@@ -50,28 +44,25 @@
 
   <body>
     <!--Div that will hold the pie chart-->
-    <button type="button" onclick="drawChart()">Request data</button>
-    <button type="button" id="getAllRuns">get all runs</button>
     <button type="button" id="getAllTests">get all tests</button>
-    <button type="button" id="compareRuns">compare runs</button>
+
     <br>
     <select id="testnames" onchange="handleTestChange()"></select>
-
-    <br>
-    <select id="left_run_sel" onchange="handleLeftRunChange()"></select>
-
-    <select id="right_run_sel" onchange="handleRightRunChange()"></select>
-
-
-    <div id="all_runs"></div>
     <div id="chart_div"></div>
+    <br><br><br>
+    Compare profiling results between two builds.
+    <br><br>
+    <select id="left_run_sel" onchange="handleLeftRunChange()"></select>
+    <select id="right_run_sel" onchange="handleRightRunChange()"></select>
+    <button type="button" id="compareRuns">compare runs</button>
+
     <br><br><br>
 
     <div id="comp_result"></div>
-
+    <br><br>
     <table style="width:100%">
       <tr>
-        <td>Detail profiling result comparison for each test</td>
+        <td>Detail profiling result comparison for each test (LEFT VS RIGHT)</td>
       </tr>
       <tr>
         <td valign="top"> <div id="comp_left"> </div> </td>

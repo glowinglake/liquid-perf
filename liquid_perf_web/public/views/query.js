@@ -197,8 +197,8 @@ function showNewComparison() {
                                     var right_percent = right[j].percentage;
                                     var left_percent = left_map[func];
                                     //div.innerHTML += 'function ' + func + ' left:' + left_percent + ' right:' + right_percent;
-                                    if (right_percent > 5 && right_percent > left_percent && ((right_percent - left_percent)*1.0/left_percent > 0.4)) {
-                                        div.innerHTML += '<br>Significant change: in ' + test + ', function ' + func + 
+                                    if (right_percent > 10 /* min percent to qualify */ && right_percent > left_percent && ((right_percent - left_percent)*1.0/left_percent > 0.4)) {
+                                        div.innerHTML += '<br>Runtime change: in ' + test + ', function ' + func + 
                                             ' runtime percentage has increased from left:' + left_percent + ' to right:' + right_percent;
                                     }
                                 }
