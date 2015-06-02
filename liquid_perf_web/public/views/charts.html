@@ -33,6 +33,10 @@
       HttpGet("/getAllTests", fillTestnameDropDown);
       });
 
+      $('#compareRuns').click(function(){
+      showNewComparison();
+      });
+
       $("p").click(function(){
       $(this).hide();
       });
@@ -49,6 +53,7 @@
     <button type="button" onclick="drawChart()">Request data</button>
     <button type="button" id="getAllRuns">get all runs</button>
     <button type="button" id="getAllTests">get all tests</button>
+    <button type="button" id="compareRuns">compare runs</button>
     <br>
     <select id="testnames" onchange="handleTestChange()"></select>
 
@@ -60,9 +65,28 @@
 
     <div id="all_runs"></div>
     <div id="chart_div"></div>
-    <br>
-    Comparison
-    <div id="comp_left"></div>
-    <div id="comp_right"></div>
-  </body>
+    <br><br><br>
+
+    <table style="width:100%">
+      <tr>
+        <td>Comparison</td>
+      </tr>
+      <tr>
+        <td valign="top"> <div id="comp_left"> </div> </td>
+        <td valign="top"> <div id="comp_right"> </div> </td>		
+      </tr>
+    </table>
+
+   <table style="width:100%">
+      <tr>
+        <td>Comparison</td>
+      </tr>
+      <tr>
+        <td> abc </td>
+        <td> def </td>		
+      </tr>
+    </table>   
+
+    <div id="comp_result"></div>
+  </body>  
 </html>
